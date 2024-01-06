@@ -1,6 +1,10 @@
 import * as fs from "fs";
 
 type CharDictionary = Map<string, Map<string, number>>;
+type ProbabilityPair = {
+  character: string;
+  probability: number;
+};
 
 const inputFileName = "russian-50000.txt";
 const decimalPointAccuracy = 3;
@@ -24,8 +28,8 @@ async function Run() {
     const counts = getCharacterCounts(cleanWords, n);
     const probabilities = getProbabilitiesFromCounts(counts);
 
-    await SaveOutput(counts, `-n${n}-counts`);
-    await SaveOutput(probabilities, `-n${n}-probabilities`);
+    await SaveOutputAsDictionaries(counts, `-n${n}-counts`);
+    await SaveOutputAsDictionaries(probabilities, `-n${n}-probabilities`);
   }
 
   console.log("\n\n--- End ---");
@@ -91,11 +95,7 @@ function getProbabilitiesFromCounts(dictionary: CharDictionary): CharDictionary 
   return probabilities;
 }
 
-async function SaveOutput(dictionary: CharDictionary, suffix = "") {
-  if (!fs.existsSync(__dirname + "/../output")) {
-    fs.mkdirSync(__dirname + "/../output");
-  }
-
+async function SaveOutputAsDictionaries(dictionary: CharDictionary, suffix = "") {
   let output: any = {};
   dictionary.forEach((dict, char) => {
     output[char] = {};
@@ -103,6 +103,27 @@ async function SaveOutput(dictionary: CharDictionary, suffix = "") {
       output[char][secChar] = number;
     });
   });
+
+  await SaveOutput(output, suffix);
+}
+
+async function SaveOutputAsArrays(dictionary: CharDictionary, suffix = "") {
+  let output: any = {};
+  dictionary.forEach((dict, char) => {
+    output[char] = [];
+    dict.forEach((number, secChar) => {
+      const pair: ProbabilityPair = { character: secChar, probability: number };
+      output[char].push(pair);
+    });
+  });
+
+  await SaveOutput(output, suffix);
+}
+
+async function SaveOutput(output: object, suffix = "") {
+  if (!fs.existsSync(__dirname + "/../output")) {
+    fs.mkdirSync(__dirname + "/../output");
+  }
 
   try {
     const outputFileName = inputFileName.split(".")[0];
