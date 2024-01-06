@@ -10,6 +10,7 @@ const inputFileName = "english-30000.txt";
 const decimalPointAccuracy = 3;
 const accuracy = Math.pow(10, decimalPointAccuracy);
 const marginOfError = 8 / accuracy;
+const upToNGram = 5;
 
 async function Run() {
   console.log("--- Run --- \n\n");
@@ -24,7 +25,7 @@ async function Run() {
       return word.match(/^[a-z]+$/) || word.match(/^[абвгдеёжзийклмнопрстуфхцчшщъыьэюя]+$/);
     });
 
-  for (let n = 1; n <= 5; n++) {
+  for (let n = 1; n <= upToNGram; n++) {
     const counts = getCharacterCounts(cleanWords, n);
     const probabilities = getProbabilitiesFromCounts(counts);
 
