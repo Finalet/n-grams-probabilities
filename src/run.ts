@@ -2,10 +2,10 @@ import * as fs from "fs";
 
 type CharDictionary = Map<string, Map<string, number>>;
 
-const inputFileName = "english-30000.txt";
-const probabilityAccuracy = 3;
-const accuracy = Math.pow(10, probabilityAccuracy);
-const marginOfError = 10 / accuracy;
+const inputFileName = "russian-50000.txt";
+const decimalPointAccuracy = 3;
+const accuracy = Math.pow(10, decimalPointAccuracy);
+const marginOfError = 8 / accuracy;
 
 async function Run() {
   console.log("--- Run --- \n\n");
