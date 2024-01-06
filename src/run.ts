@@ -6,7 +6,7 @@ type ProbabilityPair = {
   probability: number;
 };
 
-const inputFileName = "russian-50000.txt";
+const inputFileName = "english-30000.txt";
 const decimalPointAccuracy = 3;
 const accuracy = Math.pow(10, decimalPointAccuracy);
 const marginOfError = 8 / accuracy;
@@ -27,6 +27,16 @@ async function Run() {
   for (let n = 1; n <= 5; n++) {
     const counts = getCharacterCounts(cleanWords, n);
     const probabilities = getProbabilitiesFromCounts(counts);
+
+    const log = `
+[n:${n}]
+Dictionary size: ${probabilities.size}.
+Average probabilities:
+\t- Total: ${Math.round(accuracy * averageProbability(probabilities)) / accuracy}
+\t- First 5: ${Math.round(accuracy * averageProbability(probabilities, 5)) / accuracy}
+\t- Sum first 5: ${Math.round(accuracy * averageSumProbability(probabilities, 5)) / accuracy}
+`;
+    console.log(log);
 
     await SaveOutputAsDictionaries(counts, `-n${n}-counts`);
     await SaveOutputAsDictionaries(probabilities, `-n${n}-probabilities`);
@@ -132,6 +142,34 @@ async function SaveOutput(output: object, suffix = "") {
   } catch (err) {
     console.log(err);
   }
+}
+
+function averageProbability(dictionary: CharDictionary, upToPos: number | null = null): number {
+  let totalSum = 0;
+  dictionary.forEach((dict, str) => {
+    let sum = 0;
+    const keys = [...dict.keys()].sort((a, b) => dict.get(b)! - dict.get(a)!);
+    dict.forEach((probability, char) => {
+      if (!!upToPos && keys.indexOf(char) >= upToPos) return;
+      sum += probability;
+    });
+    totalSum += sum / (!!upToPos ? Math.min(upToPos, dict.size) : dict.size);
+  });
+  return totalSum / dictionary.size;
+}
+
+function averageSumProbability(dictionary: CharDictionary, upToPos: number): number {
+  let totalSum = 0;
+  dictionary.forEach((dict, str) => {
+    let sum = 0;
+    const keys = [...dict.keys()].sort((a, b) => dict.get(b)! - dict.get(a)!);
+    dict.forEach((probability, char) => {
+      if (keys.indexOf(char) >= upToPos) return;
+      sum += probability;
+    });
+    totalSum += sum;
+  });
+  return totalSum / dictionary.size;
 }
 
 Run();
