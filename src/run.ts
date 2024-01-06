@@ -40,7 +40,7 @@ function getCharacterCounts(words: string[], n: number = 2): CharDictionary {
 }
 
 function SetCharacterCountsForWord(word: string, n: number, dictionary: CharDictionary) {
-  const cleanWord = word.toLowerCase().trim().replace(/ё/g, "е");
+  const cleanWord = word.toLowerCase().trim().replace(/ё/g, "е").replace(/ъ/g, "ь");
   if (!cleanWord.match(/^[a-z]+$/) && !cleanWord.match(/^[абвгдеёжзийклмнопрстуфхцчшщъыьэюя]+$/)) return;
   if (n >= cleanWord.length) return;
 
