@@ -2,7 +2,7 @@ import * as fs from "fs";
 
 type CharDictionary = Map<string, Map<string, number>>;
 
-const inputFileName = "russian-50000.txt";
+const inputFileName = "english-30000.txt";
 const probabilityAccuracy = 3;
 const accuracy = Math.pow(10, probabilityAccuracy);
 const marginOfError = 10 / accuracy;
@@ -12,9 +12,16 @@ async function Run() {
 
   const input = fs.readFileSync(__dirname + `/../input/${inputFileName}`, "utf8");
   const words = input.split("\n");
+  const cleanWords = words
+    .map((word) => {
+      return word.toLowerCase().trim().replace(/ё/g, "е").replace(/ъ/g, "ь");
+    })
+    .filter((word) => {
+      return word.match(/^[a-z]+$/) || word.match(/^[абвгдеёжзийклмнопрстуфхцчшщъыьэюя]+$/);
+    });
 
   for (let n = 1; n <= 5; n++) {
-    const counts = getCharacterCounts(words, n);
+    const counts = getCharacterCounts(cleanWords, n);
     const probabilities = getProbabilitiesFromCounts(counts);
 
     await SaveOutput(counts, `-n${n}-counts`);
@@ -40,14 +47,12 @@ function getCharacterCounts(words: string[], n: number = 2): CharDictionary {
 }
 
 function SetCharacterCountsForWord(word: string, n: number, dictionary: CharDictionary) {
-  const cleanWord = word.toLowerCase().trim().replace(/ё/g, "е").replace(/ъ/g, "ь");
-  if (!cleanWord.match(/^[a-z]+$/) && !cleanWord.match(/^[абвгдеёжзийклмнопрстуфхцчшщъыьэюя]+$/)) return;
-  if (n >= cleanWord.length) return;
+  if (n >= word.length) return;
 
-  const steps = cleanWord.length - n;
+  const steps = word.length - n;
   for (let i = 0; i < steps; i++) {
-    const subStr = cleanWord.substring(i, i + n);
-    const nextChar = cleanWord[i + n];
+    const subStr = word.substring(i, i + n);
+    const nextChar = word[i + n];
 
     if (!dictionary.has(subStr)) {
       dictionary.set(subStr, new Map<string, number>());
