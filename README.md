@@ -23,7 +23,7 @@ Feel free to change `upToNGram` (starts from 1) to what ever depth you need (sin
 
 The script will do its magic and save the output in the `output` folder. Duh.
 
-### Contributions guide
+### Contribution guide
 
 Why would you?
 
