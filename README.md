@@ -17,7 +17,7 @@ npm start
 
 Place your `.txt` files with a single word on each line inside the `input` folder, and change the `inputFileName` to your file's name. Or touch nothing and enjoy the work I did for you.
 
-Feel free to change `upToNGram` (starts from 1) to what ever depth you need (single, bigrams, trigrams, infinity-grams-and-beyond).
+Feel free to change `upToNGram` (starts from 1) to what ever depth you need (singles, bigrams, trigrams, infinity-grams-and-beyond).
 
 ### Results 
 
