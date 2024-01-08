@@ -11,6 +11,7 @@ const decimalPointAccuracy = 3;
 const accuracy = Math.pow(10, decimalPointAccuracy);
 const marginOfError = 8 / accuracy;
 const upToNGram = 5;
+const limitArrayOutoutProbablities = 5;
 
 async function Run() {
   console.log("--- Run --- \n\n");
@@ -124,7 +125,7 @@ async function SaveOutputAsArrays(dictionary: CharDictionary, suffix = "") {
     output[char] = [];
     dict.forEach((number, secChar) => {
       const pair: ProbabilityPair = { character: secChar, probability: number };
-      output[char].push(pair);
+      if (output[char].length < limitArrayOutoutProbablities) output[char].push(pair);
     });
   });
 
