@@ -42,6 +42,7 @@ Average probabilities:
 
     await SaveOutputAsDictionaries(counts, `-n${n}-counts`);
     await SaveOutputAsDictionaries(probabilities, `-n${n}-probabilities`);
+    // await SaveOutputAsArrays(probabilities, `-n${n}-probabilities`);
   }
 
   console.log("\n\n--- End ---");
