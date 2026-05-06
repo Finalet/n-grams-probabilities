@@ -23,6 +23,7 @@ async function Run() {
       return word.toLowerCase().trim().replace(/ё/g, "е").replace(/ъ/g, "ь");
     })
     .filter((word) => {
+      // Replace this with the appropriate regex for the language you are working with.
       return word.match(/^[a-z]+$/) || word.match(/^[абвгдеёжзийклмнопрстуфхцчшщъыьэюя]+$/);
     });
 
